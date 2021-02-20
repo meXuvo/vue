@@ -1,0 +1,7 @@
+.disabled{
+    background: lightsteelblue;
+    cursor: not-allowed;
+}
+.disabled:hover{
+    background:lightsteelblue;
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Practice | vue</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container mx-auto mt-10">
+    <div id="app">
+        <div class="cart">
+            <p class="px-5 py-3 border rounded">cart( {{cart.length}} )</p>
+        </div>
+        <product :premium="premium" @add-to-cart="updateCart"></product>
+        <product></product>
+        <product></product>
+        <product></product>
+    </div>
+</div>
+<!--
+amra color er product jodi stock ee thake taile ami instock dakhabo nahole bolbo out of stock and button disable
+-->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script type="text/javascript">
+
+    Vue.component('product',{
+        props:{
+            premium: {
+                type: Boolean,
+                required:true
+            }
+    },
+        template:`
+        <div class="product flex">
+           <div class="img-section">
+               <img :src="image" alt="" style="width: 300px; height: 300px;">
+           </div>
+           <div class="article-section">
+               <a :href="link"><h1 class="text-xl">{{title}}</h1></a>
+               <p v-if="inStock">In stock</p>
+               <p v-else>Out of stock</p>
+               <p> shipping : {{ shipping }}</p>
+               <ul>
+                   <li v-for="detail in details">{{detail}}</li>
+               </ul>
+               <div class="mb-5">
+                   <div v-for="(varient, index) in varients"
+                        :key="varient.varientId"
+                        :style="{backgroundColor:varient.varientColor}"
+                        @mouseover="updateProduct(index)"
+                        class="w-10 h-10 cursor-pointer block">
+                   </div>
+               </div>
+               <div class="button-area flex">
+                   <button class="px-5 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded mr-2"
+                           @click="addToCart()"
+                           :disabled="!inStock"
+                           :class="{ disabled : !inStock }"
+                   > add to cart</button>
+               </div>
+           </div>
+       </div>
+        `,
+        data(){
+            return {
+                brand:"kodeeo",
+                product : " socks ",
+                selectedVarient : 0,
+                link: "https://www.facebook.com/meXuvo",
+                details : ["80%","20% plastic","arm"],
+                varients : [
+                    {
+                        varientId : 2134,
+                        varientColor : "green",
+                        varientImage : "image/vmSocks-green.jpg",
+                        varientQuantity:20
+                    },
+                    {
+                        varientId : 4563,
+                        varientColor: "blue",
+                        varientImage : "image/vmSocks-blue.jpg",
+                        varientQuantity:0
+                    }
+                ],
+            }
+        },
+        methods: {
+            updateProduct(index){
+                this.selectedVarient = index ;
+            },
+            addToCart(){
+                this.$emit('add-to-cart',this.varients[this.selectedVarient].varientId);
+            },
+        },
+        computed:{
+            title(){
+                return this.brand +' '+ this.product;
+            },
+            image(){
+                return this.varients[this.selectedVarient].varientImage;
+            },
+            inStock(){
+                return this.varients[this.selectedVarient].varientQuantity;
+            },
+            shipping(){
+                if(this.premium){
+                    return "Free";
+                }
+                return "$2.19";
+            }
+        }
+    })
+    let vue = new Vue({
+        el:"#app",
+        data:{
+            premium : false,
+            cart:[],
+        },
+        methods:{
+            updateCart(id){
+                this.cart.push(id)
+            }
+        }
+    })
+</script>
+</body>
+</html>
