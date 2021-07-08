@@ -23,6 +23,9 @@
   <div>
     <SelectImage></SelectImage>
   </div>
+  <div class="mb-10">
+    <test-component v-if="displayComponent" />
+  </div>
 </template>
 <script>
 import LicenseTable from './components/table/LicenseTable.vue'
@@ -32,6 +35,7 @@ import Navigation from "./components/navigation/Navigation.vue";
 import ShowModal from "./components/ShowModal.vue";
 import AboutTable from './components/table/AboutTable.vue';
 import SelectImage from './components/SelectImage.vue';
+import TestComponent from './components/TestComponent.vue';
 
   
 export default {
@@ -44,9 +48,11 @@ export default {
     ShowModal,
     Navigation,
     SelectImage,
+    TestComponent,
   },
   data() {
     return {
+      displayComponent:false,
       posts: [
         {
           id: 1,
@@ -66,6 +72,12 @@ export default {
       ],
     };
   },
+  mounted(){
+    this.displayComponent = true;
+    window.setTimeout(()=>{
+      this.displayComponent = false;
+    },5000)
+  }
 };
 </script>
 
